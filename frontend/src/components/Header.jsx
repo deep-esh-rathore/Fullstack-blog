@@ -12,7 +12,7 @@ function Header() {
   const navItems = [
     { name: 'Home', path: '/', status: true },
     { name: 'About', path: '/about', status: true },
-    { name: 'Add-Post', path: '/add-post', status: authStatus },
+    { name: 'Add-Post', path: '/posts/create', status: authStatus },
     { name: 'Sign-in', path: '/login', status: !authStatus },
     { name: 'Sign-up', path: '/signup', status: !authStatus },
   ];

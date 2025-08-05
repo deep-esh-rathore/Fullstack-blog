@@ -8,8 +8,8 @@ export const createPost = async (postData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
             },
+            credentials: 'include', // important to send cookies
             body: JSON.stringify(postData),
         });
 
@@ -23,6 +23,39 @@ export const createPost = async (postData) => {
         console.error('Error in createPost:', error);
     }
 }
+
+// export const createPost = async (postData) => {
+//     try {
+//         const formData = new FormData();
+
+//         // Append all post data to formData
+//         formData.append('title', postData.title);
+//         formData.append('slug', postData.slug);
+//         formData.append('content', postData.content);
+//         formData.append('status', postData.status);
+//         if (postData.image) {
+//             formData.append('image', postData.image[0]); // image = File from input
+//         }
+
+//         const response = await fetch(postsURL, {
+//             method: 'POST',
+//             credentials: 'include', // important to send cookies
+//             body: formData,
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || 'Failed to create post');
+//         }
+
+//         return await response.json();
+//     } catch (error) {
+//         console.error('Error in createPost:', error);
+//         throw error; // Re-throw the error to handle it in the calling function
+//     }
+// };
+
+
 export const getAllPosts = async () => {
     try {
         const response = await fetch(postsURL, {

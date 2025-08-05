@@ -1,22 +1,30 @@
 import Post from "../models/Post.js";
 
 export const createPost = async (req, res) => {
-  const { title, content, status, slug, featuredImage } = req.body;
-
   try {
-    const post = new Post({
-      title,
-      content,
-      status,
-      slug,
-      featuredImage,
-      userId: req.user.id,
-    });
+    const { title, slug, content, status, featuredImage } = req.body;
+    console.log('Received body:', req.body);
 
-    await post.save();
-    res.status(201).json(post);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (!title || !slug || !content || !status) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'Unauthorized - user not found' });
+    }
+
+      const post = new Post({
+        title,
+        slug,
+        content,
+        status,
+        featuredImage,
+        userId: req.user._id, // Ensure userId is set from authenticated user
+      });
+      await post.save();
+      res.status(201).json({ message: 'Post created successfully', post });
+  } catch (error) {
+    console.error('Create Post Error:', error);
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 

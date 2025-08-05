@@ -6,25 +6,18 @@ import cookieParser from 'cookie-parser';
 
 // Load environment variables
 dotenv.config()
-
 const app = express()
 
-// Middleware
 app.use(cors(
     {
         origin: "http://localhost:5173",
         credentials: true
     }
 ))
-app.use(express.json())
 
+app.use(express.json()); // ✅ required for JSON body parsing
+app.use(express.urlencoded({ extended: true })); // ✅ required for form-data body parsing
 app.use(cookieParser()); // Middleware to parse cookies
-
-// Disable conditional GETs and caching
-app.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-store');
-    next();
-});
 
 // Routes
 import authRoutes from './routes/authRoutes.js'
@@ -32,6 +25,14 @@ import postRoutes from './routes/postRoutes.js'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)
+
+
+
+// Disable conditional GETs and caching
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
+});
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URL)

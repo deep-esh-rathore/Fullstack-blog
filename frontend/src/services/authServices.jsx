@@ -54,7 +54,8 @@ export const getCurrentUser = async () => {
         });
 
         if (!response.ok) {
-            throw new Error("Failed to fetch current user");
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to fetch current user");
         }
 
         return await response.json();
@@ -65,16 +66,17 @@ export const getCurrentUser = async () => {
 }
 
 export const logoutUser = async () => {
-    
+
     try {
         const response = await fetch(`${authURL}/logout`, {
             method: "POST",
             credentials: "include", // important to send cookies
         });
         if (!response.ok) {
-        throw new Error("Logout failed");
-    }
-    return response.json();
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to logout");
+        }
+        return response.json();
     } catch (error) {
         console.error("Logout failed:", error);
     }

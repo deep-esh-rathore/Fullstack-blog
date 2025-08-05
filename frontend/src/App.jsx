@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import {Outlet} from 'react-router-dom'
-import { Header, Footer,Loading } from './components/index'
-import { useDispatch,useSelector } from 'react-redux'
+import { Outlet } from 'react-router-dom'
+import { Header, Footer, Loading } from './components/index'
+import { useDispatch, useSelector } from 'react-redux'
 import { getCurrentUser } from './services/authServices'
-import { login, logout,setLoading } from './store/authSlice'
+import { login, logout, setLoading } from './store/authSlice'
 
 function App() {
   const dispatch = useDispatch()
@@ -18,7 +18,7 @@ function App() {
       } catch (error) {
         console.error('Failed to fetch current user:', error)
         dispatch(logout())
-      }finally {
+      } finally {
         dispatch(setLoading(false))
       }
     }
@@ -26,13 +26,15 @@ function App() {
   }, [dispatch])
 
   return (
-    loading? (<Loading/>):
     <>
-    <Header/>
-      <main>
-        <Outlet />
-      </main>
-    <Footer />
+      {loading && <Loading />}
+      <div  className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }
