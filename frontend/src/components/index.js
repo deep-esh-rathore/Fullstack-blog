@@ -10,5 +10,6 @@ import Select from "./Select";
 import Signup from "./Signup";
 import Login from "./Login";
 import Loading from "./Loading";
-
-export { Header, Footer, Logo, LogoutBtn, PostForm, Container, Input, Button, Select, Signup, Login, Loading };
+import PrivateRoute from "./PrivateRoute";
+import PostCard from "./PostCard";
+export { Header, Footer, Logo, LogoutBtn, PostForm, Container, Input, Button, Select, Signup, Login, Loading, PrivateRoute, PostCard };

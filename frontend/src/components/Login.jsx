@@ -3,9 +3,8 @@ import { loginUser } from '../services/authServices'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { login, setLoading } from '../store/authSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
 import { Input, Button } from './index'
-import { useSelector } from 'react-redux'
 
 function Login() {
     const [error, setError] = useState("");

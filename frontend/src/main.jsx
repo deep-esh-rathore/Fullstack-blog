@@ -1,20 +1,46 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import {Provider} from 'react-redux';
-import {store} from './store/store.js'; 
+import { Provider } from 'react-redux';
+import { store } from './store/store.js';
 import Home from './pages/Home.jsx';
-import { Signup,Login, PostForm } from './components/index';
+import { Signup, Login, PostForm, PrivateRoute } from './components/index';
+import Post from './pages/Post';
 
 const router = createBrowserRouter([
-  {path: '/',element: <App />,
-    children:[
-      {path: '/', element: <Home />},
-      {path: '/signup', element: <Signup />},
-      {path: '/login', element: <Login />},
-      {path: '/posts/create', element: <PostForm />},
-    ]}
+  {
+    path: '/', element: <App />,
+    children: [
+      {
+        path: '/',
+        element: 
+        <PrivateRoute authenticated={false}>
+          <Home />
+        </PrivateRoute>
+      },
+      { path: '/signup', element:
+        <PrivateRoute authenticated={false}>
+          <Signup />
+        </PrivateRoute>  },
+      { path: '/login', element:
+        <PrivateRoute authenticated={false}>
+          <Login />
+        </PrivateRoute>  },
+      { path: '/posts/create', element:
+        <PrivateRoute authenticated={true}>
+          <PostForm />
+        </PrivateRoute>  },
+      {
+        path: '/posts/:slug/:id',
+        element: 
+        <PrivateRoute authenticated={false}>
+          <Post />
+        </PrivateRoute>
+      }
+    ]
+  }
 ])
 
 createRoot(document.getElementById('root')).render(
