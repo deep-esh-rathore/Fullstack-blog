@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store/store.js';
 import Home from './pages/Home.jsx';
-import { Signup, Login, PostForm, PrivateRoute } from './components/index';
+import { Signup, Login,CreatePost, PrivateRoute,EditPost } from './components/index';
 import Post from './pages/Post';
 
 const router = createBrowserRouter([
@@ -16,9 +16,7 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: 
-        <PrivateRoute authenticated={false}>
           <Home />
-        </PrivateRoute>
       },
       { path: '/signup', element:
         <PrivateRoute authenticated={false}>
@@ -30,13 +28,16 @@ const router = createBrowserRouter([
         </PrivateRoute>  },
       { path: '/posts/create', element:
         <PrivateRoute authenticated={true}>
-          <PostForm />
+          <CreatePost />
         </PrivateRoute>  },
       {
         path: '/posts/:slug/:id',
         element: 
-        <PrivateRoute authenticated={false}>
           <Post />
+      },
+      {path: '/edit/:id', element:
+        <PrivateRoute authenticated={true}>
+          <EditPost />
         </PrivateRoute>
       }
     ]

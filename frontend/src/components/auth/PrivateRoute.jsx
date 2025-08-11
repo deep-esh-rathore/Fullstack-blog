@@ -9,8 +9,11 @@ function PrivateRoute({ children, authenticated }) {
     useEffect(() => {
         if (authenticated && authstatus !== authenticated) {
             navigate("/login");
-        } else if (!authenticated && authstatus !== authenticated) {
+        }
+        if (!authenticated && authstatus !== authenticated) {
             navigate("/");
+            console.log("Redirecting to home page as user is not authenticated");
+
         }
     }, [authstatus, navigate, authenticated]);
     return (

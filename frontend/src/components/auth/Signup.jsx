@@ -1,10 +1,10 @@
 import React from 'react'
-import { createUser } from '../services/authServices'
+import { createUser } from '../../services/authServices'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { login,setLoading } from '../store/authSlice'
+import { login,setLoading } from '../../store/authSlice'
 import { useDispatch,useSelector } from 'react-redux'
-import { Input, Button } from './index'
+import { Input, Button } from '../index'
 
 function Signup() {
   const navigate = useNavigate();

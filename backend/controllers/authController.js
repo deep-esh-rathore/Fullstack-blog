@@ -57,7 +57,7 @@ export const login = async (req, res) => {
         });
         console.log("Set-Cookie sent for token.");
         res.status(200).json({
-            user: { id: user._id, name: user.name, email: user.email },
+            user: { _id: user._id, name: user.name, email: user.email },
         });
 
     } catch (err) {

@@ -8,13 +8,15 @@ import { login, logout, setLoading } from './store/authSlice'
 function App() {
   const dispatch = useDispatch()
   const loading = useSelector((state) => state.auth.loading)
+  const user = useSelector((state) => state.auth.user)
 
   useEffect(() => {
     dispatch(setLoading(true))
     const fetchCurrentUser = async () => {
       try {
-        const user = await getCurrentUser()
-        dispatch(login(user))
+        const response = await getCurrentUser()
+        dispatch(login({ user: response }))
+        // console.log('Current user fetched:', response)
       } catch (error) {
         console.error('Failed to fetch current user:', error)
         dispatch(logout())
@@ -23,8 +25,8 @@ function App() {
       }
     }
     fetchCurrentUser()
-  }, [dispatch])
-
+  }, [dispatch]);
+  
   return (
     <>
       {loading && <Loading />}

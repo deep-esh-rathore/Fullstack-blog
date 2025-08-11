@@ -1,56 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { setLoading } from '../store/authSlice';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createPost } from '../services/PostServices'; // adjust if needed
-import { Button, Input } from './index'; // assuming you have a Button component
+import { Button, Input } from '../index'; // assuming you have a Button component
 
-const PostForm = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { register, handleSubmit, reset, watch,setValue, formState: { errors } } = useForm();
+const PostForm = ({ postdata,msg="", onFormSubmit, btn = "" }) => {
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
   const [message, setMessage] = useState('');
 
-  const submitPost = async (data) => {
-    dispatch(setLoading(true));
-    setMessage('');
-
-    console.log("Form Data Before Sending:", data);
-
-    try {
-      const formData = {...data,
-        featuredImage: data.image[0].name // handle file input
-      }
-      const result = await createPost(formData); // this should accept FormData
-      console.log(result);
-      if (result) {
-      setMessage('Post created successfully!');
-      navigate('/'); // redirect to posts page or wherever needed
-      }
-    } catch (error) {
-      setMessage('Failed to create post.');
-    } finally {
-      dispatch(setLoading(false));
+  useEffect(() => {
+    if (postdata) {
+      setValue('title', postdata.title || '');
+      setValue('slug', postdata.slug || '');
+      setValue('content', postdata.content || '');
+      setValue('status', postdata.status || 'active');
+      setValue('image', postdata.featuredImage ); // assuming post has featuredImage
     }
-  };
+  }, [postdata]);
+
 
   const titleValue = watch('title'); // watch for title changes
   useEffect(() => {
-  const trimmedTitle = titleValue?.trim();
-  if (!trimmedTitle) {
-    setValue('slug', '');
-    return;
+    const trimmedTitle = titleValue?.trim();
+    if (!trimmedTitle) {
+      setValue('slug', '');
+      return;
+    }
+
+    const generatedSlug = trimmedTitle
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-')     // Replace spaces with dashes
+      .replace(/-+/g, '-');     // Collapse multiple dashes
+
+     const currentSlug = watch('slug');
+  if (generatedSlug !== currentSlug) {
+    setValue('slug', generatedSlug);
+  };
+  }, [titleValue, setValue]);
+
+  const onSubmit = async (data) => {
+    setMessage('');
+    try {
+      await onFormSubmit(data);
+      setMessage('Post submitted successfully!');
+    }
+    catch (error) {
+      console.error('Error submitting form:', error);
+      setMessage('Failed to submit post.');
+    }
   }
-
-  const generatedSlug = trimmedTitle
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-')     // Replace spaces with dashes
-    .replace(/-+/g, '-');     // Collapse multiple dashes
-
-  setValue('slug', generatedSlug);
-}, [titleValue, setValue]);
 
 
 
@@ -58,8 +55,9 @@ const PostForm = () => {
     <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-semibold mb-4">Create Post</h2>
       {message && <p className="text-blue-600 mb-4">{message}</p>}
+      <p>{msg}</p>
 
-      <form onSubmit={handleSubmit(submitPost)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input
           {...register('title', { required: 'Title is required' })}
           id="title" name="title"
@@ -85,7 +83,7 @@ const PostForm = () => {
         {errors.content && <p className="text-red-600">{errors.content.message}</p>}
 
         <select
-          {...register('status',{ required: 'Status is required' })}
+          {...register('status', { required: 'Status is required' })}
           id='status' name='status'
           className="border w-full border-gray-500 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-800"
         >
@@ -102,7 +100,7 @@ const PostForm = () => {
         />
 
         <Button type="submit">
-          Create Post
+          {btn || "Submit Post"}
         </Button>
       </form>
     </div>

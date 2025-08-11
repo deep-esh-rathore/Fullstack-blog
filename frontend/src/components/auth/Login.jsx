@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { loginUser } from '../services/authServices'
+import { loginUser } from '../../services/authServices'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { login, setLoading } from '../store/authSlice'
+import { login, setLoading } from '../../store/authSlice'
 import { useDispatch,useSelector } from 'react-redux'
-import { Input, Button } from './index'
+import { Input, Button } from '../index'
 
 function Login() {
     const [error, setError] = useState("");
@@ -12,6 +12,7 @@ function Login() {
     const dispatch = useDispatch();
     const { register, handleSubmit } = useForm();
     const loading = useSelector((state) => state.auth.loading);
+    const user = useSelector((state) => state.auth.user);
 
     const handleLogin = async (userData) => {
         dispatch(setLoading(true));
@@ -20,7 +21,7 @@ function Login() {
             const response = await loginUser(userData);
             if (response && response.user) {
                 console.log('User logged in successfully:', response);
-                dispatch(login(response));
+                dispatch(login({user: response.user}));
                 navigate('/');
             }
             else {

@@ -62,14 +62,14 @@ export const getPostById = async (postId) => {
     }
 }
 export const updatePost = async (postId, postData) => {
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
     try {
         const response = await fetch(`${postsURL}/${postId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
             },
+            credentials: 'include', // important to send cookies
             body: JSON.stringify(postData),
         });
 
@@ -85,14 +85,15 @@ export const updatePost = async (postId, postData) => {
 }
 
 export const deletePost = async (postId) => {
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
     try {
         const response = await fetch(`${postsURL}/${postId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                // 'Authorization': `Bearer ${token}`,
             },
+            credentials: 'include', // important to send cookies
         });
 
         if (!response.ok) {
