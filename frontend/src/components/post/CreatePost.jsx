@@ -25,13 +25,11 @@ function CreatePost() {
             console.log(result);
             if (result) {
                 // setMessage('Post created successfully!');
-                msg= 'Post created successfully!';
                 console.log('Post created successfully:', result);
                 navigate('/'); // redirect to posts page or wherever needed
             }
         } catch (error) {
             console.error('Error creating post:', error);
-            if (error) msg = 'Failed to create post.';
         } finally {
             dispatch(setLoading(false));
         }

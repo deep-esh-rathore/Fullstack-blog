@@ -16,8 +16,6 @@ function Post() {
       getPostById(id)
       .then((data) => {
         setPost(data);
-        console.log("Fetched Post:", data);
-        console.log("Current User:", user);
       }).catch((error) => {
         console.error("Error fetching post:", error);
       });

@@ -18,6 +18,7 @@ export const createPost = async (req, res) => {
         content,
         status,
         featuredImage,
+        author: req.user.name, // Ensure author is set from authenticated user
         userId: req.user._id, // Ensure userId is set from authenticated user
       });
       await post.save();

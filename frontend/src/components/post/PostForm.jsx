@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Input } from '../index'; // assuming you have a Button component
 
-const PostForm = ({ postdata,msg="", onFormSubmit, btn = "" }) => {
+const PostForm = ({ postdata, onFormSubmit, btn = "" }) => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm();
   const [message, setMessage] = useState('');
 
@@ -12,7 +12,7 @@ const PostForm = ({ postdata,msg="", onFormSubmit, btn = "" }) => {
       setValue('slug', postdata.slug || '');
       setValue('content', postdata.content || '');
       setValue('status', postdata.status || 'active');
-      setValue('image', postdata.featuredImage ); // assuming post has featuredImage
+      setValue('image', postdata.featuredImage); // assuming post has featuredImage
     }
   }, [postdata]);
 
@@ -31,10 +31,10 @@ const PostForm = ({ postdata,msg="", onFormSubmit, btn = "" }) => {
       .replace(/\s+/g, '-')     // Replace spaces with dashes
       .replace(/-+/g, '-');     // Collapse multiple dashes
 
-     const currentSlug = watch('slug');
-  if (generatedSlug !== currentSlug) {
-    setValue('slug', generatedSlug);
-  };
+    const currentSlug = watch('slug');
+    if (generatedSlug !== currentSlug) {
+      setValue('slug', generatedSlug);
+    };
   }, [titleValue, setValue]);
 
   const onSubmit = async (data) => {
@@ -55,7 +55,6 @@ const PostForm = ({ postdata,msg="", onFormSubmit, btn = "" }) => {
     <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded shadow">
       <h2 className="text-2xl font-semibold mb-4">Create Post</h2>
       {message && <p className="text-blue-600 mb-4">{message}</p>}
-      <p>{msg}</p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Input
