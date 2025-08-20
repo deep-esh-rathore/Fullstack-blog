@@ -1,6 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import { PostCard } from '../components/index'
 import { getAllPosts } from '../services/PostServices'
+import { setLoading } from '../store/authSlice';
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -8,6 +9,7 @@ function Home() {
   const postsPerPage = 18;
 
   useEffect(() => {
+    setLoading(true);
     getAllPosts()
       .then((posts) => {
         console.log("Fetched Posts:", posts);
@@ -15,6 +17,9 @@ function Home() {
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -27,7 +32,7 @@ function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      {posts.length === 0 && (
+      {!posts && (
         <div className="text-center text-gray-500">
           No posts available. Please check back later.
         </div>

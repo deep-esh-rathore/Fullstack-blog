@@ -3,6 +3,7 @@ import { getPostById } from '../services/PostServices'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import {useSelector } from 'react-redux';
+import { deletePost } from '../services/PostServices';
 
 
 function Post() {
@@ -26,6 +27,14 @@ function Post() {
 
   const isAuthor = post && user && post.userId === user._id;
 
+  const handleDelete = async () => {
+    try {
+      await deletePost(id);
+      navigate('/');
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  }
   return (
     <div>
       {post && (
@@ -49,6 +58,7 @@ function Post() {
             <button
               className="bg-pink-900 hover:bg-pink-700 text-white font-semibold 
               py-2 px-4 rounded cursor-pointer"
+              onClick={handleDelete}
             >
               Delete
             </button>

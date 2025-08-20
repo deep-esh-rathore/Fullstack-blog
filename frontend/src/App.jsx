@@ -8,7 +8,7 @@ import { login, logout, setLoading } from './store/authSlice'
 function App() {
   const dispatch = useDispatch()
   const loading = useSelector((state) => state.auth.loading)
-  const user = useSelector((state) => state.auth.user)
+  // const user = useSelector((state) => state.auth.user)
 
   useEffect(() => {
     dispatch(setLoading(true))
