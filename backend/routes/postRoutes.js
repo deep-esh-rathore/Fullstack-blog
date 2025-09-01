@@ -1,11 +1,12 @@
 import express from "express";
+import upload from "../middleware/multer.js";
 const router = express.Router();
 import {createPost, getAllPosts, getPostById, updatePost, deletePost} from "../controllers/postController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 
 
 
-router.post("/", authMiddleware, createPost);
+router.post("/",authMiddleware, upload.single("featuredImage"), createPost);
 router.delete("/:id", authMiddleware, deletePost);
 router.put("/:id", authMiddleware, updatePost);
 router.get("/", getAllPosts);

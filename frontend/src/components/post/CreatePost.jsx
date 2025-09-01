@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch } from 'react-redux';  
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createPost } from '../../services/PostServices';
 import { setLoading } from '../../store/authSlice';
@@ -17,16 +17,10 @@ function CreatePost() {
         console.log("Form Data Before Sending:", data);
 
         try {
-            const formData = {
-                ...data,
-                featuredImage: data.image[0].name // handle file input
-            }
-            const result = await createPost(formData); // this should accept FormData
+            const result = await createPost(data); // this should accept FormData
             console.log(result);
             if (result) {
-                // setMessage('Post created successfully!');
-                console.log('Post created successfully:', result);
-                navigate('/'); // redirect to posts page or wherever needed
+                if(result) navigate('/'); // redirect to posts page or wherever needed
             }
         } catch (error) {
             console.error('Error creating post:', error);
@@ -35,7 +29,7 @@ function CreatePost() {
         }
     };
     return (
-        <PostForm onFormSubmit={submitPost} btn='Create Post'/>
+        <PostForm onFormSubmit={submitPost} btn='Create Post' />
     )
 }
 

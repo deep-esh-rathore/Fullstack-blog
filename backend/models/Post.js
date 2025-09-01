@@ -15,7 +15,14 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  featuredImage: String,
+  featuredImage: {
+    type: String,
+    default: null,
+  },
+  publicId: {
+    type: String,
+    default: null,
+  },
   status: {
     type: String,
     enum: ["active", "inactive"],

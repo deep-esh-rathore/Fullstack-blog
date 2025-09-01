@@ -6,11 +6,8 @@ export const createPost = async (postData) => {
     try {
         const response = await fetch(postsURL, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             credentials: 'include', // important to send cookies
-            body: JSON.stringify(postData),
+            body: postData, // send FormData directly
         });
 
         if (!response.ok) {

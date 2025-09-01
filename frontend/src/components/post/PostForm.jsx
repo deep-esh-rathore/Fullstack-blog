@@ -40,8 +40,18 @@ const PostForm = ({ postdata, onFormSubmit, btn = "" }) => {
   const onSubmit = async (data) => {
     setMessage('');
     try {
-      await onFormSubmit(data);
-      setMessage('Post submitted successfully!');
+      // Convert data to FormData
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("slug", data.slug);
+    formData.append("content", data.content);
+    formData.append("status", data.status);
+
+    if (data.featuredImage && data.featuredImage[0]) {
+      formData.append("featuredImage", data.featuredImage[0]); // 👈 match multer field
+    }
+    await onFormSubmit(formData);
+    setMessage('Post submitted successfully!');
     }
     catch (error) {
       console.error('Error submitting form:', error);
@@ -92,9 +102,9 @@ const PostForm = ({ postdata, onFormSubmit, btn = "" }) => {
 
         <input
           type="file"
-          id="image" name="image"
+          id="featuredImage" name="featuredImage"
           accept="image/*"
-          {...register('image')}
+          {...register("featuredImage")}
           className="border w-full border-gray-500 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-800"
         />
 

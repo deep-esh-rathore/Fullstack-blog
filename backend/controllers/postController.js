@@ -1,9 +1,14 @@
 import Post from "../models/Post.js";
+import cloudinary from "../config/cloudinary.js"
+import streamifier from 'streamifier';
 
 export const createPost = async (req, res) => {
   try {
-    const { title, slug, content, status, featuredImage } = req.body;
+    const { title, slug, content, status } = req.body;
+    let imageURL = null;
+    let imagePublicId = null;
     console.log('Received body:', req.body);
+    console.log('Received file:', req.file);
 
     if (!title || !slug || !content || !status) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -12,12 +17,38 @@ export const createPost = async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized - user not found' });
     }
 
+      // handle file upload to Cloudinary
+    if (req.file) {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "mern_blog",
+          },
+          (error, result) => {
+            if (error) {
+              console.error("Cloudinary upload error:", error);
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+
+        // pipe buffer into Cloudinary
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+      imageURL = uploadResult.secure_url;
+      imagePublicId = uploadResult.public_id;
+    }
+
       const post = new Post({
         title,
         slug,
         content,
         status,
-        featuredImage,
+        featuredImage: imageURL, 
+        publicId: imagePublicId,
         author: req.user.name, // Ensure author is set from authenticated user
         userId: req.user._id, // Ensure userId is set from authenticated user
       });
