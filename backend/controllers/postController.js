@@ -7,8 +7,6 @@ export const createPost = async (req, res) => {
     const { title, slug, content, status } = req.body;
     let imageURL = null;
     let imagePublicId = null;
-    console.log('Received body:', req.body);
-    console.log('Received file:', req.file);
 
     if (!title || !slug || !content || !status) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -80,18 +78,57 @@ export const getPostById = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
+  console.log("req.body:", req.body);
+  console.log("req.file:", req.file);
   try {
-    const post = await Post.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.id },
-      req.body,
-      { new: true }
-    );
-    if (!post) return res.status(404).json({ message: "Not found or unauthorized" });
+    let post = await Post.findOne({ _id: req.params.id, userId: req.user._id });
+
+    if (!post) {
+      return res.status(404).json({ message: "Not found or unauthorized" });
+    }
+
+    const { title, slug, content, status } = req.body;
+
+    // Start with existing values
+    let updateData = {
+      title: title || post.title,
+      slug: slug || post.slug,
+      content: content || post.content,
+      status: status && status !== "undefined" ? status : post.status,
+    };
+
+    // If a new file is uploaded → replace old Cloudinary image
+    if (req.file) {
+      // delete old image if it exists
+      if (post.publicId) {
+        await cloudinary.uploader.destroy(post.publicId);
+      }
+
+      const uploadResult = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "mern_blog" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+      updateData.featuredImage = uploadResult.secure_url;
+      updateData.publicId = uploadResult.public_id;
+    }
+
+    post = await Post.findByIdAndUpdate(req.params.id, updateData, { new: true });
+
     res.json(post);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Update Post Error:", err);
+    res.status(500).json({ message: "Server Error" });
   }
 };
+
 
 export const deletePost = async (req, res) => {
   try {

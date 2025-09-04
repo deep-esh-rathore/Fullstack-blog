@@ -29,11 +29,7 @@ function EditPost() {
   const update = async (data) => {
     dispatch(setLoading(true));
     try {
-      const formData = {
-        ...data,
-        featuredImage: data.image[0].name // handle file input
-      }
-      const result = await updatePost(id, formData);
+      const result = await updatePost(id, data);
       if (result) {
         console.log('Post updated successfully:', result);
         navigate(`/posts/${result.slug}/${result._id}`);

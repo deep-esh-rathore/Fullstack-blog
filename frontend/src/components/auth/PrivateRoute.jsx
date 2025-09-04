@@ -1,21 +1,25 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Loading } from '../index'
 
 function PrivateRoute({ children, authenticated }) {
-    const navigate = useNavigate();
     const authstatus = useSelector((state) => state.auth.status);
+    const loading = useSelector((state) => state.auth.loading);
 
-    useEffect(() => {
-        if (authenticated && authstatus !== authenticated) {
-            navigate("/login");
-        }
-        if (!authenticated && authstatus !== authenticated) {
-            navigate("/");
-            console.log("Redirecting to home page as user is not authenticated");
+    if (loading) {
+        return <Loading />;
+    }
 
-        }
-    }, [authstatus, navigate, authenticated]);
+    // If the route requires authentication but user is not logged in
+    if (authenticated && !authstatus) {
+        return <Navigate to="/login" replace />
+    }
+
+    // If the route must be public but user IS logged in
+    if (!authenticated && authstatus) {
+        return <Navigate to="/" replace />
+    }
     return (
         <>{children}</>
     )

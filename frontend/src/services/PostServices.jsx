@@ -58,16 +58,14 @@ export const getPostById = async (postId) => {
         console.error('Error in getPostById:', error);
     }
 }
+
 export const updatePost = async (postId, postData) => {
     // const token = localStorage.getItem('token');
     try {
         const response = await fetch(`${postsURL}/${postId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             credentials: 'include', // important to send cookies
-            body: JSON.stringify(postData),
+            body: postData,
         });
 
         if (!response.ok) {

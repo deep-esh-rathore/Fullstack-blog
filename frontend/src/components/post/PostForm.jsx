@@ -12,7 +12,7 @@ const PostForm = ({ postdata, onFormSubmit, btn = "" }) => {
       setValue('slug', postdata.slug || '');
       setValue('content', postdata.content || '');
       setValue('status', postdata.status || 'active');
-      setValue('image', postdata.featuredImage); // assuming post has featuredImage
+      setValue('featuredImage', postdata.featuredImage); // assuming post has featuredImage
     }
   }, [postdata]);
 

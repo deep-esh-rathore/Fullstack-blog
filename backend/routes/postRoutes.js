@@ -8,10 +8,9 @@ import authMiddleware from "../middleware/authMiddleware.js";
 
 router.post("/",authMiddleware, upload.single("featuredImage"), createPost);
 router.delete("/:id", authMiddleware, deletePost);
-router.put("/:id", authMiddleware, updatePost);
+router.put("/:id", authMiddleware, upload.single("featuredImage"), updatePost);
 router.get("/", getAllPosts);
 router.get("/:id", getPostById);
-
 
 
 export default router;  
