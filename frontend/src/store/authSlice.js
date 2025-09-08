@@ -6,6 +6,7 @@ const authSlice = createSlice({
         user: null,
         status: false,
         loading: true,
+        message: null,
     },
     reducers:{
         login:(state,action)=>{
@@ -20,9 +21,15 @@ const authSlice = createSlice({
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
+        },
+        setMessage: (state, action) => {
+            state.message = action.payload; // dynamically set message
+        },
+        clearMessage: (state) => {
+            state.message = null; // clear after some time or when dismissed
         }
 
     }
 })
-export const {login,logout,setLoading} = authSlice.actions;
+export const {login,logout,setLoading,setMessage,clearMessage} = authSlice.actions;
 export default authSlice.reducer;

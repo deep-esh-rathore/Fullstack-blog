@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { getPostById } from '../services/PostServices'
+import { getPostById,deletePost } from '../services/PostServices'
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import {useSelector } from 'react-redux';
-import { deletePost } from '../services/PostServices';
+import {useDispatch, useSelector } from 'react-redux';
+import { setLoading, setMessage } from '../store/authSlice';
 
 
 function Post() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
@@ -28,11 +29,15 @@ function Post() {
   const isAuthor = post && user && post.userId === user._id;
 
   const handleDelete = async () => {
+    dispatch(setLoading(true));
     try {
       await deletePost(id);
+      dispatch(setMessage("Post deleted successfully ✅"))
       navigate('/');
     } catch (error) {
       console.error("Error deleting post:", error);
+    } finally {
+      dispatch(setLoading(false));
     }
   }
   return (

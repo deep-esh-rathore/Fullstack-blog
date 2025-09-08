@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
 import { updatePost,getPostById } from '../../services/PostServices';
-import { setLoading } from '../../store/authSlice';
+import { setLoading,setMessage } from '../../store/authSlice';
 
 
 function EditPost() {
@@ -14,16 +14,13 @@ function EditPost() {
   const [postdata, setPostdata] = useState(null);
 
   useEffect(() => {
-    try {
       getPostById(id)
       .then((data) => {
         setPostdata(data);
       }).catch((error) => {
         console.error("Error fetching post for edit:", error);
+        dispatch(setMessage("Failed to fetch post ❌"));
       });
-    } catch (error) {
-      console.error("Error fetching post for edit:", error);
-    }
   },[id]);
 
   const update = async (data) => {
@@ -31,11 +28,13 @@ function EditPost() {
     try {
       const result = await updatePost(id, data);
       if (result) {
-        console.log('Post updated successfully:', result);
+        dispatch(setMessage("Post updated successfully ✨"));
+        // console.log('Post updated successfully:', result);
         navigate(`/posts/${result.slug}/${result._id}`);
       }
     } catch (error) {
       console.error('Error updating post:', error);
+      dispatch(setMessage(error.message || "Failed to update post ❌"));
     } finally {
       dispatch(setLoading(false));
     }

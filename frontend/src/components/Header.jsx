@@ -1,13 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { clearMessage } from '../store/authSlice';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Logo } from './index'
 import LogoutBtn from './LogoutBtn';
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const message = useSelector((state) => state.auth.message);
 
   const navItems = [
     { name: 'Home', path: '/', status: true },
@@ -18,6 +20,7 @@ function Header() {
   ];
 
   return (
+    <>
     <header className="bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 
     text-white px-8 py-4 flex items-center justify-between shadow-md">
       <div>
@@ -47,6 +50,19 @@ function Header() {
         {authStatus && <LogoutBtn />}
       </div>
     </header>
+
+    {message && (
+        <div className="relative bg-pink-100 text-pink-800 px-6 py-2 text-center text-sm font-normal shadow-md flex items-center justify-center">
+          <span>{message}</span>
+          <button
+            onClick={() => dispatch(clearMessage())}
+            className="absolute right-4 border border-pink-800 rounded-full px-1 py-1 text-xs hover:cursor-pointer hover:text transition-colors"
+          >
+            ❌
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 export default Header
