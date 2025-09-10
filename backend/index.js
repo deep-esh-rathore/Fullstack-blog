@@ -10,7 +10,11 @@ const app = express()
 
 app.use(cors(
     {
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173",
+            "https://fullstack-blog-z5u3.onrender.com"
+        ],
+
+
         credentials: true
     }
 ))
@@ -26,6 +30,10 @@ import postRoutes from './routes/postRoutes.js'
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)
 
+// ✅ Test route (so you don’t get "Cannot GET /")
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+})
 
 
 // Disable conditional GETs and caching
