@@ -11,7 +11,7 @@ const app = express()
 app.use(cors(
     {
         origin: ["http://localhost:5173",
-            "https://fullstack-blog-z5u3.onrender.com"
+            "https://fullstack-blog-self.vercel.app"
         ],
 
 
