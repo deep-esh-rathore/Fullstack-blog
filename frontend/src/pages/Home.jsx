@@ -15,10 +15,11 @@ function Home() {
     getAllPosts()
       .then((posts) => {
         console.log("Fetched Posts:", posts);
-        setPosts(posts);
+        setPosts(Array.isArray(posts) ? posts : []);
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
+        setPosts([]);
       })
       .finally(() => {
         setLoading(false);
@@ -27,7 +28,7 @@ function Home() {
 
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = (posts || []).slice(indexOfFirstPost, indexOfLastPost);
 
   // Calculate total pages
   const totalPages = Math.ceil(posts.length / postsPerPage);
