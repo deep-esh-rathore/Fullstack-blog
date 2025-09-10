@@ -2,7 +2,6 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const postsURL = `${BASE_URL}/posts`;
 
 export const createPost = async (postData) => {
-    const token = localStorage.getItem('token');
     try {
         const response = await fetch(postsURL, {
             method: 'POST',
