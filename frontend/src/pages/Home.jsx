@@ -3,15 +3,17 @@ import { PostCard } from '../components/index'
 import { getAllPosts } from '../services/PostServices'
 import { setLoading } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 function Home() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 18;
 
   useEffect(() => {
-    setLoading(true);
+    dispatch(setLoading(true));
     getAllPosts()
       .then((posts) => {
         console.log("Fetched Posts:", posts);
@@ -22,7 +24,7 @@ function Home() {
         setPosts([]);
       })
       .finally(() => {
-        setLoading(false);
+        dispatch(setLoading(false));
       });
   }, []);
 
